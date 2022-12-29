@@ -1,8 +1,7 @@
 from transformers import AutoModelForQuestionAnswering, AutoTokenizer, pipeline
 import streamlit as st
 
-
-
+@st.cache
 def answer_question(question, context):
     model_name = "deepset/roberta-base-squad2"
 
@@ -14,12 +13,8 @@ def answer_question(question, context):
     }
     res = nlp(QA_input)
 
-    # b) Load model & tokenizer
-    model = AutoModelForQuestionAnswering.from_pretrained(model_name)
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
     output = res["answer"]
     return output
-
 
 
 def main():
@@ -27,7 +22,7 @@ def main():
 
     st.write("This app answers your question based on the context you gave")
     st.write("Model source: https://huggingface.co/deepset/roberta-base-squad2?context=My+name+is+Wolfgang+and+I+live+in+Berlin.+i+working+in+Apple.+but+sometimes+work+in+Micr.&question=Where+do+you+work%3F")
-
+    st.write("Cache miss: expensive_computation("") ran")
     with st.form("my_form"):
         question = st.text_area("Enter your question here:")
         context = st.text_area("Enter your context here:")
